@@ -30,20 +30,19 @@ def success():
                 return render_template("index.html", text="File does not contain an address column", classType="text-warning")
 
             addresses = list(df[address_col_name])
-            global nom
+
             nom = ArcGIS()
 
             coordinates = [nom.geocode(address) for address in addresses]
-            latitudes = [
-                coordinate.latitude if coordinate is not None else None for coordinate in coordinates]
-            longitudes = [
-                coordinate.longitude if coordinate is not None else None for coordinate in coordinates]
+            latitudes = [coordinate.latitude if coordinate is not None else None for coordinate in coordinates]
+            longitudes = [coordinate.longitude if coordinate is not None else None for coordinate in coordinates]
 
             df["Latitude"] = latitudes
             df["Longitude"] = longitudes
 
-            result = df.to_html(
-                classes="table table-bordered table-hover w-auto", index=False)
+            result = df.to_html(index=False,
+                classes="table table-bordered table-hover w-auto")
+                
             return render_template("index.html", table=result, btn="download_btn.html")
 
         except UnicodeDecodeError:
